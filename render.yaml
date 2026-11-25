@@ -1,0 +1,43 @@
+# Render Blueprint: API + managed PostgreSQL. Review before applying; this does NOT touch the existing chemilinx.in site.
+databases:
+  - name: chemilinx-db
+    plan: basic-256mb
+    databaseName: chemilinx
+
+services:
+  - type: web
+    name: chemilinx-api
+    runtime: node
+    rootDir: server
+    plan: starter
+    buildCommand: npm ci && npm run build
+    preDeployCommand: npm run db:deploy
+    startCommand: npm start
+    healthCheckPath: /api/health
+    disk:                       # uploaded product images (a persistent disk needs a paid plan)
+      name: uploads
+      mountPath: /var/data/uploads
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase: { name: chemilinx-db, property: connectionString }
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: UPLOAD_DIR
+        value: /var/data/uploads
+      - key: CLIENT_ORIGIN
+        sync: false             # e.g. https://www.your-domain.com (the Vercel domain)
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      - key: NOTIFY_EMAIL
+        sync: false

@@ -1,0 +1,15 @@
+# Local development database (alternative to a system PostgreSQL install).
+# Matches DATABASE_URL in server/.env.example.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: chemilinx
+      POSTGRES_PASSWORD: chemilinx
+      POSTGRES_DB: chemilinx
+    ports:
+      - "5433:5432"
+    volumes:
+      - chemilinx-pgdata:/var/lib/postgresql/data
+volumes:
+  chemilinx-pgdata:
