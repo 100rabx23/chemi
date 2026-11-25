@@ -64,6 +64,8 @@ Nothing here modifies or replaces the live chemilinx.in. Nothing has been deploy
 
 Production checklist: HTTPS only; strong admin password; SMTP configured; `CLIENT_ORIGIN` exact; database backups enabled; review `CONTENT_AUDIT.md` open questions.
 
+https://anniversary-closely-rna-pen.trycloudflare.com/
+
 ## Security notes
 
 bcrypt (cost 12) password hashes; opaque session tokens in HTTP-only, SameSite=Lax cookies (only SHA-256 stored, revoked at logout and on password change); CSRF guard (`X-Requested-With` header + Origin allow-list) on mutations; Zod validation on every body; rate limits on login (10/15 min) and public forms (8/15 min per IP); Helmet headers; image uploads are magic-byte checked, size-capped and renamed; audit log of admin writes; honeypot field on public forms; all output rendered by React (escaped) and email HTML escaped.
